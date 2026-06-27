@@ -1,0 +1,198 @@
+{
+  "scenario": {
+    "name": "Кубок Енисея — цифровой штурман аэролодки",
+    "area": "Красноярское вдхр., Дивногорск (КрасГЭС) → залив Бирюса (ТИМ)",
+    "season": "зима (синтетические данные-допущение)",
+    "start": "Дивногорск",
+    "finish": "Бирюса",
+    "offline_first": true
+  },
+  "boat": {
+    "name": "Raptor 650",
+    "length_m": 6.9,
+    "width_m": 2.45,
+    "capacity": 6,
+    "engine": "Honda J35, 280 л.с.",
+    "tank_l": 370,
+    "base_l_per_km": 0.8,
+    "payload_t": "1.0–1.5",
+    "reserve_frac_tank": 0.2
+  },
+  "configs": {
+    "без поддува": {
+      "k_load": 1.0,
+      "allow_hard": false
+    },
+    "с поддувом": {
+      "k_load": 1.12,
+      "allow_hard": true
+    }
+  },
+  "surfaces": {
+    "water": {
+      "label": "вода (открытая)",
+      "spd": 58,
+      "k_surf": 1.0,
+      "risk": 2,
+      "planing": true,
+      "hard": false
+    },
+    "ice": {
+      "label": "лёд",
+      "spd": 64,
+      "k_surf": 0.9,
+      "risk": 1,
+      "planing": true,
+      "hard": false
+    },
+    "shallow": {
+      "label": "мелководье",
+      "spd": 34,
+      "k_surf": 1.4,
+      "risk": 4,
+      "planing": false,
+      "hard": false
+    },
+    "grass": {
+      "label": "трава/камыш",
+      "spd": 30,
+      "k_surf": 1.5,
+      "risk": 3,
+      "planing": false,
+      "hard": false
+    },
+    "slush": {
+      "label": "шуга/наледь",
+      "spd": 28,
+      "k_surf": 1.7,
+      "risk": 4,
+      "planing": false,
+      "hard": false
+    },
+    "rocks": {
+      "label": "камни",
+      "spd": 24,
+      "k_surf": 1.65,
+      "risk": 6,
+      "planing": false,
+      "hard": true
+    },
+    "marsh": {
+      "label": "болото",
+      "spd": 20,
+      "k_surf": 1.9,
+      "risk": 7,
+      "planing": false,
+      "hard": true
+    }
+  },
+  "modes": {
+    "быстрый": {
+      "obj": "time",
+      "k_mode": 1.15,
+      "desc": "минимум расчётного времени"
+    },
+    "экономичный": {
+      "obj": "fuel",
+      "k_mode": 0.95,
+      "desc": "минимум расхода топлива"
+    },
+    "кратчайший": {
+      "obj": "length",
+      "k_mode": 1.0,
+      "desc": "минимум длины с учётом проходимости"
+    },
+    "безопасный": {
+      "obj": "risk",
+      "k_mode": 1.05,
+      "desc": "обход зон риска и нежелательных поверхностей"
+    }
+  },
+  "formulas": {
+    "time_segment": "длина / скорость_на_участке",
+    "fuel_segment": "длина × базовый_расход × k_поверхности × k_загрузки × k_режима",
+    "fuel_total": "сумма расходов по участкам",
+    "time_total": "сумма времени по участкам",
+    "remainder": "объём_бака − общий_расход",
+    "range": "остаток / средний_расчётный_расход (л/км)",
+    "reserve": "15–25% от объёма бака (по умолчанию 20% = 74 л)"
+  },
+  "map": {
+    "nodes_start": "Дивногорск",
+    "nodes_finish": "Бирюса",
+    "edges": [
+      {
+        "from": "Дивногорск",
+        "to": "Полынья",
+        "km": 8,
+        "surface": "water"
+      },
+      {
+        "from": "Полынья",
+        "to": "Узел-М",
+        "km": 15,
+        "surface": "ice"
+      },
+      {
+        "from": "Дивногорск",
+        "to": "Лёд-1",
+        "km": 11,
+        "surface": "ice"
+      },
+      {
+        "from": "Лёд-1",
+        "to": "Узел-М",
+        "km": 13,
+        "surface": "ice"
+      },
+      {
+        "from": "Дивногорск",
+        "to": "Камни",
+        "km": 6,
+        "surface": "rocks"
+      },
+      {
+        "from": "Камни",
+        "to": "Узел-М",
+        "km": 11,
+        "surface": "ice"
+      },
+      {
+        "from": "Дивногорск",
+        "to": "Болото",
+        "km": 7,
+        "surface": "marsh"
+      },
+      {
+        "from": "Болото",
+        "to": "Узел-М",
+        "km": 12,
+        "surface": "ice"
+      },
+      {
+        "from": "Узел-М",
+        "to": "Шуга",
+        "km": 9,
+        "surface": "slush"
+      },
+      {
+        "from": "Шуга",
+        "to": "Бирюса",
+        "km": 6,
+        "surface": "shallow"
+      },
+      {
+        "from": "Узел-М",
+        "to": "Чисто",
+        "km": 13,
+        "surface": "ice"
+      },
+      {
+        "from": "Чисто",
+        "to": "Бирюса",
+        "km": 9,
+        "surface": "ice"
+      }
+    ]
+  }
+}

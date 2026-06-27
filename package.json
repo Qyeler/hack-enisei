@@ -4,7 +4,7 @@
   "private": true,
   "description": "MVP web app for airboat route calculation with C++ routing core.",
   "scripts": {
-    "import": "node scripts/import_pipisa.js",
+    "import": "node scripts/import_pipisa.js ./pipisa.json",
     "build:engine": "mkdir -p build && g++ -std=c++17 -O2 -Wall -Wextra cpp/route_engine.cpp -o build/route_engine",
     "build": "npm run import && npm run build:engine",
     "start": "node server.js"

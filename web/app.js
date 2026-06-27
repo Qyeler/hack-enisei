@@ -65,6 +65,37 @@ function listItems(items = []) {
   return items.map((item) => `<li>${item}</li>`).join('');
 }
 
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
+}
+
+function formulaList(formulas = {}) {
+  const labels = {
+    time_segment: 'Время участка',
+    froude: 'Число Froude',
+    planing_threshold: 'Порог глиссирования',
+    resistance: 'Сопротивление',
+    power: 'Мощность',
+    fuel_segment: 'Топливо участка',
+    fuel_fallback: 'Страховка топлива',
+    risk_segment: 'Риск участка',
+    reserve_l: 'Резерв топлива',
+    edge_cost: 'Стоимость ребра'
+  };
+  return Object.entries(formulas).map(([key, value]) => `
+    <div class="formula-row">
+      <dt>${labels[key] || key}</dt>
+      <dd>${escapeHtml(value)}</dd>
+    </div>
+  `).join('');
+}
+
 async function fetchJson(url) {
   const response = await fetch(url);
   const payload = await response.json();
@@ -538,7 +569,7 @@ function renderCalculationInputs(result) {
     </div>
     <div class="calc-box">
       <b>Формулы</b>
-      <p>Время: ${inputs.formulas.time_segment}<br>Fn: ${inputs.formulas.froude}<br>Сопротивление: ${inputs.formulas.resistance}<br>Мощность: ${inputs.formulas.power}<br>Топливо: ${inputs.formulas.fuel_segment}<br>Риск: ${inputs.formulas.risk_segment}</p>
+      <dl class="formula-list">${formulaList(inputs.formulas)}</dl>
     </div>
     <div class="calc-box">
       <b>Скорость и режим движения</b>

@@ -446,8 +446,17 @@ button:hover {
 }
 
 .details-grid {
-  grid-template-columns: 0.8fr 0.9fr 1.25fr 1.25fr;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(420px, 1.1fr);
   margin-top: 16px;
+}
+
+.details-grid > section {
+  min-width: 0;
+}
+
+.details-grid > section:nth-child(3),
+.details-grid > section:nth-child(4) {
+  grid-column: 1 / -1;
 }
 
 .calc-inputs {
@@ -480,6 +489,32 @@ button:hover {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.45;
+}
+
+.formula-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.formula-row {
+  display: grid;
+  gap: 3px;
+}
+
+.formula-row dt {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.formula-row dd {
+  margin: 0;
+  color: var(--muted);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .used-values {

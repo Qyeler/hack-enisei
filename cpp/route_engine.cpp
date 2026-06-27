@@ -714,14 +714,16 @@ static void write_result_json(std::ostream& out, const Scenario& scenario, const
         out << "}";
     }
     out << ",\"formulas\":{";
-    out << "\"time_segment\":\"km / recommended_speed_kmh\"";
-    out << ",\"froude\":\"v_ms / sqrt(g * hull_length_m)\"";
-    out << ",\"resistance\":\"(0.5 * rho_air * area * Cd * v^2 * hump + air_drag + mass * g * mu_surface) * k_surf\"";
-    out << ",\"power\":\"resistance_N * v_ms / propulsive_efficiency / 1000\"";
-    out << ",\"fuel_segment\":\"fuel_l_h * time_h, где fuel_l_h = power_kw * BSFC / fuel_density\"";
-    out << ",\"risk_segment\":\"km * surface_risk * speed_risk * narrow_risk\"";
-    out << ",\"reserve_l\":\"tank_l * reserve_frac_tank\"";
-    out << ",\"edge_cost\":\"w_distance * km + w_time * (time_min / 10) + w_fuel * (fuel_l / 10) + w_risk * (risk_points / 5) + penalties\"";
+    out << "\"time_segment\":\"t_h = km / V_rec_kmh\"";
+    out << ",\"froude\":\"Fn = (V_rec_kmh / 3.6) / sqrt(g * hull_length_m)\"";
+    out << ",\"planing_threshold\":\"V_planing = max(V_min, 3.6 * Fn_full * sqrt(g * L) * sqrt(m / max(m_dry + 500, 1)))\"";
+    out << ",\"resistance\":\"R_dyn = 0.5*rho_air*A_res*Cd*v^2; R_air = 0.5*rho_air*A_air*0.9*v^2; R_surf = m_eff*g*mu_surface*max(0.55,k_surf); R = (R_dyn*k_hump + R_air + R_surf)*max(0.65,k_surf)\"";
+    out << ",\"power\":\"P = clamp(R * v / (1000 * eta), P_min, P_max)\"";
+    out << ",\"fuel_segment\":\"q_fuel = P * BSFC * k_mode / (rho_fuel * 1000); F_seg = max(q_fuel * t_h, 0.08 * fallback)\"";
+    out << ",\"fuel_fallback\":\"fallback = km * base_l_per_km * k_surf * k_load * k_mode\"";
+    out << ",\"risk_segment\":\"Risk_seg = km * surface_risk * speed_risk * narrow_risk\"";
+    out << ",\"reserve_l\":\"reserve_l = tank_l * reserve_frac_tank\"";
+    out << ",\"edge_cost\":\"C_edge = w_d*km + w_t*(time_min/10) + w_f*(fuel_l/10) + w_r*(risk_points/5) + penalties\"";
     out << "},\"speed_policy\":{";
     out << "\"base\":\"Базовая скорость берется из типа поверхности, затем корректируется под режим маршрута.\"";
     out << ",\"narrow_waterway\":\"Ребра OSM waterway и малые водоемы считаются узкими: скорость режется до медленного темпа.\"";
@@ -780,7 +782,7 @@ static void write_result_json(std::ostream& out, const Scenario& scenario, const
             << ",\"risk\":" << s.risk_component
             << ",\"planing_penalty\":" << s.planing_penalty
             << ",\"hard_penalty\":" << s.hard_penalty << "}";
-        out << ",\"fuel_formula\":\"" << json_escape("fuel_l_h * time_h; fuel_l_h = power_kw * bsfc_g_per_kwh * k_mode / (fuel_density_kg_l * 1000)") << "\"";
+        out << ",\"fuel_formula\":\"" << json_escape("F_seg = max(fuel_l_h * time_h, 0.08 * fallback); fuel_l_h = power_kw * bsfc_g_per_kwh * k_mode / (fuel_density_kg_l * 1000)") << "\"";
         out << ",\"planing\":" << (s.surface.planing ? "true" : "false");
         out << ",\"hard\":" << (s.surface.hard ? "true" : "false");
         out << "}";

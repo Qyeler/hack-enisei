@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const defaultSource = '/Users/nikitanazarov/Downloads/pipisa (1).json';
+const defaultSource = path.join(root, 'pipisa.json');
 const sourcePath = process.argv[2] || defaultSource;
 const outDir = path.join(root, 'app_data');
 const rawOut = path.join(outDir, 'pipisa_scenario.json');
